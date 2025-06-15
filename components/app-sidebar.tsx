@@ -2,24 +2,15 @@
 
 import * as React from "react";
 import {
-  IconCamera,
-  IconChartBar,
-  IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
-  IconFolder,
+  IconBookmark,
   IconHelp,
+  IconHome,
   IconInnerShadowTop,
-  IconListDetails,
-  IconReport,
+  IconPick,
   IconSearch,
   IconSettings,
-  IconUsers,
 } from "@tabler/icons-react";
 
-import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
@@ -41,119 +32,48 @@ const data = {
   },
   navMain: [
     {
-      title: "Dashboard",
-      url: "#",
-      icon: IconDashboard,
+      title: "Home",
+      url: "/dashboard",
+      icon: IconHome,
     },
     {
-      title: "Lifecycle",
-      url: "#",
-      icon: IconListDetails,
+      title: "Explore by Subreddit",
+      url: "/my-subreddits",
+      icon: IconBookmark,
     },
     {
-      title: "Analytics",
-      url: "#",
-      icon: IconChartBar,
-    },
-    {
-      title: "Projects",
-      url: "#",
-      icon: IconFolder,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: IconUsers,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: IconCamera,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: IconFileDescription,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: IconFileAi,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
+      title: "Mine posts",
+      url: "/trending",
+      icon: IconPick,
     },
   ],
   navSecondary: [
     {
       title: "Settings",
-      url: "#",
+      url: "/settings",
       icon: IconSettings,
     },
     {
-      title: "Get Help",
-      url: "#",
+      title: "Help",
+      url: "/help",
       icon: IconHelp,
     },
     {
       title: "Search",
-      url: "#",
+      url: "/search",
       icon: IconSearch,
-    },
-  ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: IconDatabase,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: IconReport,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: IconFileWord,
     },
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
-      <SidebarHeader>
+    <Sidebar
+      collapsible="offcanvas"
+      className="*:data-[slot=sidebar-menu-button]:from-primary/5 *:data-[slot=sidebar-menu-button]:to-card *:data-[slot=sidebar-menu-button]:bg-gradient-to-t dark:*:data-[slot=sidebar-menu-button]:bg-card *:data-[slot=sidebar-menu-button]:shadow-xs"
+      {...props}
+    >
+      <SidebarHeader className="bg-gradient-to-l from-primary/5 to-card dark:bg-card shadow-xs">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
@@ -168,12 +88,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="bg-gradient-to-l from-primary/5 to-card dark:bg-card shadow-xs">
         <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="bg-gradient-to-l from-primary/5 to-card dark:bg-card shadow-xs">
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
