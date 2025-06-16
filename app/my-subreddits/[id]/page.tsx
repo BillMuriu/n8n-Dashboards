@@ -3,6 +3,9 @@
 import { supabase } from "@/lib/supabaseClient";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { SidebarInset } from "@/components/ui/sidebar";
+import { SiteHeader } from "@/components/siteheader";
+import { SubredditNavigation } from "../_components/subreddit-navigation";
 
 const Subreddit = () => {
   const [data, setData] = useState<any[]>([]);
@@ -17,13 +20,20 @@ const Subreddit = () => {
   };
 
   return (
-    <div className="p-4 space-y-4">
-      <h1 className="text-xl font-semibold">Subreddit</h1>
-      <Button onClick={fetchData}>Load Posts</Button>
-      <pre className="whitespace-pre-wrap bg-gray-100 dark:bg-gray-800 p-4 rounded-md">
-        {JSON.stringify(data, null, 2)}
-      </pre>
-    </div>
+    <SidebarInset>
+      <SiteHeader title="n8n" />
+      <div className="p-4 space-y-6">
+        <h1 className="text-xl font-semibold">Subreddit</h1>
+
+        {/* 🧭 Navigation Component */}
+        <SubredditNavigation />
+
+        {/* 🧾 JSON Output */}
+        <pre className="whitespace-pre-wrap bg-gray-100 dark:bg-gray-800 p-4 rounded-md">
+          {JSON.stringify(data, null, 2)}
+        </pre>
+      </div>
+    </SidebarInset>
   );
 };
 
