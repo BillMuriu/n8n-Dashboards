@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -15,6 +16,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { ThemeCard } from "./theme-card";
+import { ThemesChart } from "./theme/example-chart";
+import { DataTableDemo } from "./theme/demo-datatable";
 
 export function SubredditNavigation() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -39,12 +42,27 @@ export function SubredditNavigation() {
   }, [searchQuery, themes]);
 
   return (
-    <div className="flex w-full max-w-4xl flex-col gap-6">
+    <div className="flex w-full max-w-4xl flex-col justify-start flex-start gap-6">
       <Tabs defaultValue="main">
-        <TabsList>
-          <TabsTrigger value="main">Main</TabsTrigger>
-          <TabsTrigger value="topics">Topics</TabsTrigger>
-          <TabsTrigger value="themes">Themes</TabsTrigger>
+        <TabsList className="flex rounded-md overflow-hidden border-gray-900">
+          <TabsTrigger
+            value="main"
+            className="px-4 py-2 text-sm data-[state=active]:border data-[state=active]:border-border data-[state=active]:rounded-md"
+          >
+            Main
+          </TabsTrigger>
+          <TabsTrigger
+            value="topics"
+            className="px-4 py-2 text-sm data-[state=active]:border data-[state=active]:border-border data-[state=active]:rounded-md"
+          >
+            Topics <Badge>43</Badge>
+          </TabsTrigger>
+          <TabsTrigger
+            value="themes"
+            className="px-4 py-2 text-sm data-[state=active]:border data-[state=active]:border-border data-[state=active]:rounded-md"
+          >
+            Themes <Badge variant="secondary">3</Badge>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="main">
@@ -65,7 +83,7 @@ export function SubredditNavigation() {
         </TabsContent>
 
         <TabsContent value="topics">
-          <Card>
+          <Card className="border-none">
             <CardHeader>
               <CardTitle>Topics</CardTitle>
               <CardDescription>
@@ -81,9 +99,12 @@ export function SubredditNavigation() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="themes">
-          <Card className="w-full">
-            <CardHeader className="pb-3">
+        <TabsContent
+          value="themes"
+          className="flex flex-col md:flex-row items-stretch gap-5"
+        >
+          <Card className="w-full md:max-w-md shadow-none bg-gradient-to-t from-primary/5">
+            <CardHeader>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <Input
@@ -115,6 +136,10 @@ export function SubredditNavigation() {
               </ScrollArea>
             </CardContent>
           </Card>
+
+          <div className="w-full md:flex-1">
+            <ThemesChart />
+          </div>
         </TabsContent>
       </Tabs>
     </div>
