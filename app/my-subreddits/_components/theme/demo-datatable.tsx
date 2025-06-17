@@ -24,6 +24,7 @@ import {
   MoreHorizontal,
   Text,
   XCircle,
+  Calendar,
 } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
@@ -186,6 +187,34 @@ export function DataTableDemo() {
         enableSorting: true,
       },
       {
+        id: "createdAt",
+        accessorKey: "createdAt",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Created At" />
+        ),
+        cell: ({ cell }) => {
+          const value = cell.getValue<Project["createdAt"]>();
+          return <div>{new Date(value).toLocaleDateString()}</div>;
+        },
+        meta: {
+          label: "Created At",
+          variant: "dateRange", // 👈 enables the date filter in your switch
+          icon: Calendar, // optional: use lucide-react Calendar icon
+        },
+        enableColumnFilter: true,
+        enableSorting: true,
+      },
+
+      {
+        id: "owner",
+        accessorKey: "owner",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Owner" />
+        ),
+        cell: ({ cell }) => <div>{cell.getValue<Project["owner"]>()}</div>,
+        enableColumnFilter: true,
+      },
+      {
         id: "actions",
         cell: function Cell() {
           return (
@@ -225,8 +254,6 @@ export function DataTableDemo() {
   return (
     <div className="data-table-container">
       <DataTable table={table}>
-        <DataTableFilterList table={table} />
-        <DataTableSortList table={table} />
         <DataTableToolbar table={table} />
       </DataTable>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -18,20 +18,47 @@ import { Search } from "lucide-react";
 import { ThemeCard } from "./theme-card";
 import { ThemesChart } from "./theme/example-chart";
 import { DataTableDemo } from "./theme/demo-datatable";
+import {
+  ThemeService,
+  themeConfigs,
+  ThemeConfig,
+} from "@/services/themeService";
+import { TimePeriod } from "@/services/timeSeriesService";
 
-export function SubredditNavigation() {
+interface SubredditNavigationProps {
+  onThemeSelect?: (themeConfig: ThemeConfig | null) => void;
+  selectedTheme?: ThemeConfig | null;
+  timePeriod?: TimePeriod;
+}
+
+export function SubredditNavigation({
+  onThemeSelect,
+  selectedTheme,
+  timePeriod = "weekly",
+}: SubredditNavigationProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [themes, setThemes] = useState<ThemeConfig[]>(themeConfigs);
+  const [isLoadingCounts, setIsLoadingCounts] = useState(false);
 
-  // Sample themes data
-  const themes = [
-    { title: "Advice Requests", posts: 5, growth: "+8.2%" },
-    { title: "Solution Requests", posts: 3, growth: "+12.5%" },
-    { title: "Self Promotion", posts: 2 },
-    { title: "Money Talk", posts: 6, growth: "+4.1%" },
-    { title: "Opportunity Ideas", posts: 7, growth: "+16.7%" },
-    { title: "Pain & Anger", posts: 4, growth: "+6.9%" },
-    { title: "Other", posts: 1 },
-  ];
+  // Load theme counts when component mounts or timePeriod changes
+  useEffect(() => {
+    loadThemeCounts();
+  }, [timePeriod]);
+
+  const loadThemeCounts = async () => {
+    setIsLoadingCounts(true);
+    try {
+      const updatedThemes = await ThemeService.fetchAllThemeTimeSeries(
+        timePeriod
+      );
+      setThemes(updatedThemes);
+    } catch (error) {
+      console.error("Failed to load theme counts:", error);
+      // Keep using the default counts from themeConfigs
+    } finally {
+      setIsLoadingCounts(false);
+    }
+  };
 
   // Filter themes based on search query
   const filteredThemes = useMemo(() => {
@@ -40,6 +67,12 @@ export function SubredditNavigation() {
       theme.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [searchQuery, themes]);
+
+  const handleThemeClick = (theme: ThemeConfig) => {
+    const newSelectedTheme =
+      selectedTheme?.dbField === theme.dbField ? null : theme;
+    onThemeSelect?.(newSelectedTheme);
+  };
 
   return (
     <div className="flex w-full max-w-4xl flex-col justify-start flex-start gap-6">
@@ -114,17 +147,37 @@ export function SubredditNavigation() {
                   className="pl-10"
                 />
               </div>
+              {selectedTheme && (
+                <div className="mt-2 space-y-1">
+                  <Badge variant="secondary" className="text-xs">
+                    Selected: {selectedTheme.title}
+                  </Badge>
+                  {selectedTheme.growthData && (
+                    <div className="text-xs text-muted-foreground">
+                      {selectedTheme.posts} posts ({timePeriod})
+                    </div>
+                  )}
+                </div>
+              )}
             </CardHeader>
             <CardContent className="p-0">
               <ScrollArea className="h-48 w-full fade-bottom">
                 <div className="flex flex-col gap-2 p-6 pt-0">
+                  {isLoadingCounts && (
+                    <div className="text-center py-4 text-muted-foreground text-sm">
+                      Loading {timePeriod} data...
+                    </div>
+                  )}
                   {filteredThemes.length > 0 ? (
                     filteredThemes.map((theme, index) => (
                       <ThemeCard
-                        key={index}
+                        key={theme.dbField}
                         title={theme.title}
                         posts={theme.posts}
                         growth={theme.growth}
+                        dbField={theme.dbField}
+                        isSelected={selectedTheme?.dbField === theme.dbField}
+                        onClick={() => handleThemeClick(theme)}
                       />
                     ))
                   ) : (
@@ -135,6 +188,19 @@ export function SubredditNavigation() {
                 </div>
               </ScrollArea>
             </CardContent>
+            <CardFooter className="pt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={loadThemeCounts}
+                disabled={isLoadingCounts}
+                className="w-full"
+              >
+                {isLoadingCounts
+                  ? "Refreshing..."
+                  : `Refresh ${timePeriod} data`}
+              </Button>
+            </CardFooter>
           </Card>
 
           <div className="w-full md:flex-1">
