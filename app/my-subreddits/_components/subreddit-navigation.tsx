@@ -34,7 +34,7 @@ interface SubredditNavigationProps {
 export function SubredditNavigation({
   onThemeSelect,
   selectedTheme,
-  timePeriod = "weekly",
+  timePeriod = "hourly",
 }: SubredditNavigationProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [themes, setThemes] = useState<ThemeConfig[]>(themeConfigs);

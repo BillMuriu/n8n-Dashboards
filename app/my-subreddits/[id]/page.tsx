@@ -91,6 +91,9 @@ const Subreddit = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="20mins">20 minutes</SelectItem>
+                <SelectItem value="30mins">30 minutes</SelectItem>
+                <SelectItem value="hourly">Hourly</SelectItem>
                 <SelectItem value="daily">Daily</SelectItem>
                 <SelectItem value="weekly">Weekly</SelectItem>
                 <SelectItem value="monthly">Monthly</SelectItem>

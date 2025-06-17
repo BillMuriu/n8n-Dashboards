@@ -214,28 +214,6 @@ export function DataTableDemo() {
         cell: ({ cell }) => <div>{cell.getValue<Project["owner"]>()}</div>,
         enableColumnFilter: true,
       },
-      {
-        id: "actions",
-        cell: function Cell() {
-          return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <MoreHorizontal className="h-4 w-4" />
-                  <span className="sr-only">Open menu</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem variant="destructive">
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          );
-        },
-        size: 32,
-      },
     ],
     []
   );
